@@ -2,6 +2,7 @@ import { Tile } from "./tile";
 import { GRID_SIZES } from "../concepts/grid";
 import { useTiles } from "./hooks/tiles-hooks";
 import { ActionBar } from "./action-bar";
+import { Debug } from "./debug/debug";
 
 export const Grid = () => {
   const state = useTiles();
@@ -26,26 +27,7 @@ export const Grid = () => {
         </div>
       </div>
 
-      {/* <div className="flex flex-col mt-4 text-sm text-gray-300">
-        <div>
-          Selected #1:{" "}
-          {state.selected.first
-            ? `${state.selected.first.row}×${state.selected.first.col} → ${
-                getByPosition(state.tiles, state.selected.first, state.rank)
-                  .value
-              }`
-            : "None"}
-        </div>
-        <div>
-          Selected #2:{" "}
-          {state.selected.second
-            ? `${state.selected.second.row}×${state.selected.second.col} → ${
-                getByPosition(state.tiles, state.selected.second, state.rank)
-                  .value
-              }`
-            : "None"}
-        </div>
-      </div> */}
+      <Debug show/>
       <ActionBar />
     </>
   );
