@@ -51,6 +51,6 @@ describe("PuzzleState", () => {
     ];
 
     const puzzle = new PuzzleState(solvedTileArray, rank);
-    expect(puzzle.isSolved(rank)).toBe(true);
+    expect(puzzle.isSolved()).toBe(true);
   });
 });

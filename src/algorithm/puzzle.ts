@@ -5,6 +5,7 @@ type matrix = number[][];
 
 export class PuzzleState {
   private puzzle: matrix;
+  private _rank: Rank;
   private _moves: number = 0;
   private _cost: number = 0;
 
@@ -14,6 +15,7 @@ export class PuzzleState {
       const { row, col } = tile.position;
       this.puzzle[row][col] = tile.value === EMPTY_TILE_VALUE ? 0 : tile.value;
     });
+    this._rank = rank;
   }
 
   display(): string {
@@ -36,12 +38,17 @@ export class PuzzleState {
     this._moves = value;
   }
 
-  isSolved(rank: Rank): boolean {
-    return this.display() === FINAL_STATE[rank];
+  isSolved(): boolean {
+    return this.display() === FINAL_STATE[this._rank];
   }
 
   updateCost() {}
 }
+
+export const isSolved = (tiles: TileArray, rank: Rank): boolean => {
+  const puzzle = new PuzzleState(tiles, rank);
+  return puzzle.isSolved();
+};
 
 const serialize = (puzzle: matrix): string => {
   return puzzle

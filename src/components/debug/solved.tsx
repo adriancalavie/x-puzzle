@@ -1,6 +1,6 @@
+import { useTiles } from "../hooks/tiles-hooks";
 
 export const Solved = () => {
-  return (
-    <div>TODO</div>
-  )
-}
+  const { solved } = useTiles();
+  return <div>{JSON.stringify(solved)}</div>;
+};

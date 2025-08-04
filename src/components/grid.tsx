@@ -27,7 +27,7 @@ export const Grid = () => {
         </div>
       </div>
 
-      <Debug show/>
+      <Debug show />
       <ActionBar />
     </>
   );

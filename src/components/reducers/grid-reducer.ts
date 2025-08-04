@@ -1,3 +1,4 @@
+import { isSolved } from "../../algorithm/puzzle";
 import {
   eq,
   fromIdx,
@@ -23,6 +24,7 @@ export type GridState = {
   tiles: TileArray;
   rank: Rank;
   selected: SelectedTiles;
+  solved: boolean;
 };
 
 type ShuffleAction = {
@@ -148,7 +150,12 @@ function handleMoveEmptyTile(
   let nextSelected = updateSelected(position, state.selected);
   nextSelected = updateSelected(nextPosition, nextSelected);
 
-  return { ...state, tiles: nextTiles, selected: nextSelected };
+  return {
+    ...state,
+    tiles: nextTiles,
+    selected: nextSelected,
+    solved: isSolved(nextTiles, state.rank),
+  };
 }
 
 function handleSwitch(state: GridState, action: SwitchTilesAction): GridState {
@@ -160,7 +167,12 @@ function handleSwitch(state: GridState, action: SwitchTilesAction): GridState {
   let nextSelected = updateSelected(first, selected);
   nextSelected = updateSelected(second, nextSelected);
 
-  return { ...state, tiles: nextTiles, selected: nextSelected };
+  return {
+    ...state,
+    tiles: nextTiles,
+    selected: nextSelected,
+    solved: isSolved(nextTiles, rank),
+  };
 }
 
 export function gridReducer(state: GridState, action: GridAction): GridState {
@@ -189,5 +201,6 @@ export const initialState = (rank: Rank): GridState => {
     tiles,
     rank,
     selected: none(),
+    solved: isSolved(tiles, rank),
   };
 };

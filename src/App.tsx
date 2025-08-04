@@ -5,7 +5,7 @@ import { TilesProvider } from "./components/providers/tiles-provider";
 function App() {
   return (
     <>
-      <TilesProvider rank={5}>
+      <TilesProvider rank={3}>
         <Grid />
       </TilesProvider>
     </>
