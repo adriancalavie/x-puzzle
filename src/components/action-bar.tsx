@@ -3,6 +3,7 @@ import { useTiles, useTilesDispatch } from "./hooks/tiles-hooks";
 import { isBoth } from "../concepts/selected";
 import type { Direction } from "../concepts/grid";
 
+
 export const ActionBar = () => {
   const dispatch = useTilesDispatch();
   const state = useTiles();
@@ -11,7 +12,7 @@ export const ActionBar = () => {
     dispatch({ type: "shuffle" });
   };
   const handleSwitch = () => {
-    if (isBoth(state.selected)) {
+    if (isBoth(state.selected) && !state.solved) {
       dispatch({
         type: "switch",
         first: state.selected.first,
@@ -25,6 +26,20 @@ export const ActionBar = () => {
     dispatch({ type: "move-empty-tile", direction });
   };
 
+  const randomSwitch = async () => {
+    while (!state.solved){
+       const first = state.tiles[Math.floor(Math.random() * state.tiles.length)];
+      const second =
+        state.tiles[Math.floor(Math.random() * state.tiles.length)];
+      dispatch({
+        type: "switch",
+        first: first.position,
+        second: second.position,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1));
+    }
+  };
+
   return (
     <div className="flex justify-center mt-4">
       <div className="my-auto flex flex-col items-center">
@@ -32,6 +47,7 @@ export const ActionBar = () => {
         <Button onClick={handleSwitch} disabled={!isBoth(state.selected)}>
           Switch
         </Button>
+        <Button onClick={randomSwitch}>Random Switches</Button>
       </div>
       <div className="flex flex-col items-center ml-4">
         <div>

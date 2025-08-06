@@ -1,5 +1,9 @@
 import type { Rank } from "../concepts/grid";
-import { EMPTY_TILE_VALUE, type TileArray } from "../concepts/tile";
+import {
+  EMPTY_TILE_VALUE,
+  isEmptyTile,
+  type TileArray,
+} from "../concepts/tile";
 
 type matrix = number[][];
 
@@ -48,6 +52,44 @@ export class PuzzleState {
 export const isSolved = (tiles: TileArray, rank: Rank): boolean => {
   const puzzle = new PuzzleState(tiles, rank);
   return puzzle.isSolved();
+};
+
+export const isSolvable = (tiles: TileArray, rank: Rank): boolean => {
+  const emptyTile = tiles.find((tile) => isEmptyTile(tile));
+  if (!emptyTile) {
+    throw new Error("No empty tile found in the puzzle.");
+  }
+
+  const inversions = countInversions(tiles);
+
+  const isEvenRank = rank % 2 === 0;
+  const hasEvenInversions = inversions % 2 === 0;
+  const isEmptyTileOnEvenRow = emptyTile.position.row % 2 === 0;
+
+  if (!isEvenRank) {
+    return hasEvenInversions;
+  }
+
+  // For even rank grids
+  return (
+    (isEmptyTileOnEvenRow && !hasEvenInversions) ||
+    (!isEmptyTileOnEvenRow && hasEvenInversions)
+  );
+};
+
+const countInversions = (tiles: TileArray): number => {
+  let inversions = 0;
+  for (let i = 0; i < tiles.length - 1; i++) {
+    for (let j = i + 1; j < tiles.length; j++) {
+      if (isEmptyTile(tiles[i]) || isEmptyTile(tiles[j])) {
+        continue;
+      }
+      if (tiles[i].value > tiles[j].value) {
+        inversions++;
+      }
+    }
+  }
+  return inversions;
 };
 
 const serialize = (puzzle: matrix): string => {
