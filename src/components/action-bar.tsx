@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 import { useTiles, useTilesDispatch } from "./hooks/tiles-hooks";
 import { isBoth } from "../concepts/selected";
 import type { Direction } from "../concepts/grid";
-
+import { useArrowKeys } from "./hooks/hot-keys";
 
 export const ActionBar = () => {
   const dispatch = useTilesDispatch();
@@ -27,8 +27,8 @@ export const ActionBar = () => {
   };
 
   const randomSwitch = async () => {
-    while (!state.solved){
-       const first = state.tiles[Math.floor(Math.random() * state.tiles.length)];
+    while (!state.solved) {
+      const first = state.tiles[Math.floor(Math.random() * state.tiles.length)];
       const second =
         state.tiles[Math.floor(Math.random() * state.tiles.length)];
       dispatch({
@@ -39,6 +39,8 @@ export const ActionBar = () => {
       await new Promise((resolve) => setTimeout(resolve, 1));
     }
   };
+
+  useArrowKeys(handleMove);
 
   return (
     <div className="flex justify-center mt-4">
