@@ -6,7 +6,8 @@ import { useTiles, useTilesDispatch } from "./hooks/tiles-hooks";
 export type TileBackgroundColor =
   | "bg-blue-500"
   | "bg-neutral-900"
-  | "bg-green-500";
+  | "bg-green-500"
+  | "bg-red-500";
 
 export type TileProps = {
   value: TileValue;
@@ -22,7 +23,7 @@ export const Tile = ({
   animated = false,
 }: TileProps) => {
   const dispatch = useTilesDispatch();
-  const { solved } = useTiles();
+  const { solved, solvable } = useTiles();
 
   const pixelPosition = getPixelPosition(position);
 
@@ -35,7 +36,11 @@ export const Tile = ({
     dispatch({ type: "deselect", position });
   };
 
-  const tileClass = `${getBackgroundColor(selected, solved)} text-white`;
+  const tileClass = `${getBackgroundColor(
+    selected,
+    solved,
+    solvable
+  )} text-white`;
 
   const baseStyles = `
     ${tileClass} w-[100px] h-[100px] rounded-xl
@@ -72,8 +77,14 @@ export const Tile = ({
 
 const getBackgroundColor = (
   selected: boolean,
-  solved: boolean
+  solved: boolean,
+  solvable: boolean
 ): TileBackgroundColor => {
+  // if (solved) return "bg-green-500";
+  // if (!solvable) return "bg-red-500";
+  // return selected ? "bg-blue-500" : "bg-neutral-900";
+  if (selected) return "bg-blue-500";
   if (solved) return "bg-green-500";
-  return selected ? "bg-blue-500" : "bg-neutral-900";
+  if (!solvable) return "bg-red-500";
+  return "bg-neutral-900";
 };

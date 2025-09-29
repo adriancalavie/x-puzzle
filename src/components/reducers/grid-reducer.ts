@@ -1,4 +1,4 @@
-import { isSolved } from "../../algorithm/puzzle";
+import { isSolvable, isSolved } from "../../algorithm/puzzle";
 import {
   eq,
   fromIdx,
@@ -25,6 +25,7 @@ export type GridState = {
   rank: Rank;
   selected: SelectedTiles;
   solved: boolean;
+  solvable: boolean;
 };
 
 type ShuffleAction = {
@@ -155,6 +156,7 @@ function handleMoveEmptyTile(
     tiles: nextTiles,
     selected: nextSelected,
     solved: isSolved(nextTiles, state.rank),
+    solvable: isSolvable(nextTiles, state.rank),
   };
 }
 
@@ -172,6 +174,7 @@ function handleSwitch(state: GridState, action: SwitchTilesAction): GridState {
     tiles: nextTiles,
     selected: nextSelected,
     solved: isSolved(nextTiles, rank),
+    solvable: isSolvable(nextTiles, rank),
   };
 }
 
@@ -202,5 +205,6 @@ export const initialState = (rank: Rank): GridState => {
     rank,
     selected: none(),
     solved: isSolved(tiles, rank),
+    solvable: isSolvable(tiles, rank),
   };
 };

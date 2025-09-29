@@ -1,4 +1,5 @@
 import { Selected } from "./selected";
+import { Solvable } from "./solvable";
 import { Solved } from "./solved";
 
 export type DebugProps = {
@@ -10,6 +11,7 @@ export const Debug = ({ show }: DebugProps) => {
     <>
       <Selected />
       <Solved />
+      <Solvable />
     </>
   ) : null;
 };

@@ -60,6 +60,18 @@ describe("PuzzleState", () => {
     expect(isSolvable(unsolvableTileArray, rank)).toBe(false);
   });
 
+  test("should recognize solvable state for rank 3", () => {
+    const rank = 3;
+    // prettier-ignore
+    const solvableTileArray: TileArray = fromValues([
+      1, 2, 3,
+      4, 5, 6,
+      7, EMPTY, 8
+    ], rank);
+
+    expect(isSolvable(solvableTileArray, rank)).toBe(true);
+  });
+
   test("should recognize unsolvable state for rank 4", () => {
     const rank = 4;
     // prettier-ignore
