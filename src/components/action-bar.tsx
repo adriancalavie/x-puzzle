@@ -3,6 +3,7 @@ import { useTiles, useTilesDispatch } from "./hooks/tiles-hooks";
 import { isBoth } from "../concepts/selected";
 import type { Direction } from "../concepts/grid";
 import { useArrowKeys } from "./hooks/hot-keys";
+import { useEffect } from "react";
 
 export const ActionBar = () => {
   const dispatch = useTilesDispatch();
@@ -41,6 +42,10 @@ export const ActionBar = () => {
   };
 
   useArrowKeys(handleMove);
+
+  useEffect(() => {
+    console.log("Can switch:", isBoth(state.selected));
+  }, [state.selected]);
 
   return (
     <div className="flex justify-center mt-4">

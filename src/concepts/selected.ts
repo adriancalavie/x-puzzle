@@ -1,3 +1,4 @@
+import { isNull, notNull } from "../utils/nullity";
 import { eq, type Position } from "./grid";
 import type { Pair } from "./pair";
 
@@ -9,13 +10,13 @@ export type AtLeastOne = One | Both;
 export type AtMostOne = None | One;
 
 export const isNone = (selected: SelectedTiles): selected is None =>
-  selected.first === null && selected.second === null;
+  isNull(selected.first) && isNull(selected.second);
 
 export const isOne = (selected: SelectedTiles): selected is One =>
-  selected.first !== null && selected.second === null;
+  notNull(selected.first) && isNull(selected.second);
 
 export const isBoth = (selected: SelectedTiles): selected is Both =>
-  selected.first !== null && selected.second !== null;
+  notNull(selected.first) && notNull(selected.second);
 
 export const none = (): None => ({
   first: null,
@@ -42,32 +43,27 @@ export const select = (selected: AtMostOne, position: Position): AtLeastOne => {
 export const deselect = (
   selected: AtLeastOne,
   position: Position
-): SelectedTiles => {
+): AtMostOne => {
   const positions = [selected.first, selected.second];
 
-  const isPositionSelected = positions.some((pos) => pos && eq(pos, position));
-  if (!isPositionSelected) {
-    return selected;
-  }
+  const [nextFirst, nextSecond] = positions
+    .map((pos) => (pos && eq(pos, position) ? null : pos))
+    .filter(notNull);
 
-  const [nextFirst, nextSecond] = positions.map((pos) =>
-    pos && eq(pos, position) ? null : pos
-  );
-
-  return fromValues(nextFirst, nextSecond);
+  return fromValues(nextFirst, nextSecond) as AtMostOne;
 };
 export const fromValues = (
   first: Position | null,
   second: Position | null
 ): SelectedTiles => {
-  const notNull = [first, second].filter((pos) => pos !== null);
+  const validPositions = [first, second].filter(notNull);
 
-  switch (notNull.length) {
+  switch (validPositions.length) {
     case 0:
       return none();
     case 1:
-      return one(notNull[0]);
+      return one(validPositions[0]);
     default:
-      return both(notNull[0], notNull[1]);
+      return both(validPositions[0], validPositions[1]);
   }
 };

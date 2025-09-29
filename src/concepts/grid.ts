@@ -70,7 +70,10 @@ export const switchTiles = (
   position2: Position,
   rank: Rank
 ): TileArray => {
-  const nextTiles = [...tiles];
+  const nextTiles: TileArray = tiles.map((tile) => ({
+    ...tile,
+    selected: false,
+  }));
   const tile1 = getByPosition(nextTiles, position1, rank);
   const tile2 = getByPosition(nextTiles, position2, rank);
 
@@ -127,4 +130,3 @@ const isInGrid = (position: Position, rank: Rank): boolean => {
 const isInBounds = (idx: number, rank: Rank): boolean => {
   return idx >= 0 && idx < MAP_SIZES[rank];
 };
-

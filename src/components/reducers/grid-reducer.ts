@@ -10,9 +10,9 @@ import {
 } from "../../concepts/grid";
 import {
   deselect,
-  fromValues,
   isBoth,
   isNone,
+  isOne,
   none,
   select,
   type SelectedTiles,
@@ -60,16 +60,6 @@ export type GridAction =
   | SwitchTilesAction
   | MoveEmptyTileAction;
 
-const updateSelected = (
-  updatedPosition: Position,
-  selected: SelectedTiles
-): SelectedTiles => {
-  const [first, second] = [selected.first, selected.second].map((pos) => {
-    return pos && eq(updatedPosition, pos) ? updatedPosition : pos;
-  });
-  return fromValues(first, second);
-};
-
 function handleShuffle(state: GridState): GridState {
   const randomValues = randomTiles(state.rank);
   return {
@@ -85,6 +75,17 @@ function handleSelect(state: GridState, action: SelectTileAction): GridState {
   const { position } = action;
   const { selected: prev, tiles } = state;
   if (isBoth(prev)) {
+    return {
+      ...state,
+      selected: none(),
+      tiles: tiles.map((tile) => ({
+        ...tile,
+        selected: false,
+      })),
+    };
+  }
+
+  if (isOne(prev) && eq(prev.first, position)) {
     return {
       ...state,
       selected: none(),
@@ -147,14 +148,16 @@ function handleMoveEmptyTile(
     nextPosition,
     state.rank
   );
-
-  let nextSelected = updateSelected(position, state.selected);
-  nextSelected = updateSelected(nextPosition, nextSelected);
+  console.log(
+    "Selected tiles:",
+    nextTiles.filter((t) => t.selected)
+  );
+  console.log("State selected:", state.selected);
 
   return {
     ...state,
     tiles: nextTiles,
-    selected: nextSelected,
+    selected: none(),
     solved: isSolved(nextTiles, state.rank),
     solvable: isSolvable(nextTiles, state.rank),
   };
@@ -162,17 +165,14 @@ function handleMoveEmptyTile(
 
 function handleSwitch(state: GridState, action: SwitchTilesAction): GridState {
   const { first, second } = action;
-  const { tiles, rank, selected } = state;
+  const { tiles, rank } = state;
 
   const nextTiles = switchTiles(tiles, first, second, rank);
-
-  let nextSelected = updateSelected(first, selected);
-  nextSelected = updateSelected(second, nextSelected);
 
   return {
     ...state,
     tiles: nextTiles,
-    selected: nextSelected,
+    selected: none(),
     solved: isSolved(nextTiles, rank),
     solvable: isSolvable(nextTiles, rank),
   };
