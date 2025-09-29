@@ -1,14 +1,15 @@
 import type { Rank } from "../concepts/grid";
+import { eq, type Matrix } from "../concepts/matrix";
 import {
   EMPTY_TILE_VALUE,
   isEmptyTile,
   type TileArray,
 } from "../concepts/tile";
 
-type matrix = number[][];
-
 export class PuzzleState {
-  private puzzle: matrix;
+  private static _solved: Map<Rank, Matrix> = new Map();
+
+  private puzzle: Matrix;
   private _rank: Rank;
   private _moves: number = 0;
   private _cost: number = 0;
@@ -38,12 +39,36 @@ export class PuzzleState {
     return this._cost;
   }
 
+  get rank(): Rank {
+    return this._rank;
+  }
+
   set moves(value: number) {
     this._moves = value;
   }
 
   isSolved(): boolean {
-    return this.display() === FINAL_STATE[this._rank];
+    return eq(this.puzzle, this.solved);
+  }
+
+  private get solved(): Matrix {
+    return PuzzleState.getSolved(this._rank);
+  }
+
+  private static getSolved(rank: Rank): Matrix {
+    if (!this._solved.has(rank)) {
+      const solved: Matrix = Array.from({ length: rank }, () =>
+        Array(rank).fill(0)
+      );
+      for (let i = 0; i < rank; i++) {
+        for (let j = 0; j < rank; j++) {
+          solved[i][j] = i * rank + j + 1;
+        }
+      }
+      solved[rank - 1][rank - 1] = 0; // Empty tile
+      this._solved.set(rank, solved);
+    }
+    return this._solved.get(rank)!;
   }
 
   updateCost() {}
@@ -92,15 +117,8 @@ const countInversions = (tiles: TileArray): number => {
   return inversions;
 };
 
-const serialize = (puzzle: matrix): string => {
+const serialize = (puzzle: Matrix): string => {
   return puzzle
     .map((row) => row.map((value) => (value === 0 ? " " : value)).join(" | "))
     .join("\n");
 };
-
-const FINAL_STATE = {
-  3: "1 | 2 | 3\n4 | 5 | 6\n7 | 8 |  ",
-  4: "1 | 2 | 3 | 4\n5 | 6 | 7 | 8\n9 | 10 | 11 | 12\n13 | 14 | 15 |  ",
-  5: "1 | 2 | 3 | 4 | 5\n6 | 7 | 8 | 9 | 10\n11 | 12 | 13 | 14 | 15\n 16 | 17 | 18 | 19 | 20\n21 | 22 | 23 | 24 |  ",
-  6: "1 | 2 | 3 | 4 | 5 | 6\n7 | 8 | 9 | 10 | 11 | 12\n13 | 14 | 15 | 16 | 17 | 18\n19 | 20 | 21 | 22 | 23 | 24\n25 | 26 | 27 | 28 | 29 | 30\n31 | 32 | 33 | 34 | 35 |  ",
-} as const satisfies Record<Rank, string>;
