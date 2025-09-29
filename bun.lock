@@ -4,6 +4,7 @@
     "": {
       "name": "x-puzzle",
       "dependencies": {
+        "@datastructures-js/priority-queue": "^6.3.4",
         "@tailwindcss/cli": "^4.1.11",
         "@tailwindcss/vite": "^4.1.11",
         "eslint-plugin-react-compiler": "^19.1.0-rc.2",
@@ -78,6 +79,10 @@
     "@babel/traverse": ["@babel/traverse@7.28.0", "", { "dependencies": { "@babel/code-frame": "^7.27.1", "@babel/generator": "^7.28.0", "@babel/helper-globals": "^7.28.0", "@babel/parser": "^7.28.0", "@babel/template": "^7.27.2", "@babel/types": "^7.28.0", "debug": "^4.3.1" } }, "sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg=="],
 
     "@babel/types": ["@babel/types@7.28.2", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.27.1" } }, "sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ=="],
+
+    "@datastructures-js/heap": ["@datastructures-js/heap@4.3.5", "", {}, "sha512-zgO8KO26WnZdCxe72Ck+55mhUYmw/1CL/TueKSIIU6aqoOcXAqeaL2kRldJcXtCdJ43rqgIKYdEkiL07sQ+2VQ=="],
+
+    "@datastructures-js/priority-queue": ["@datastructures-js/priority-queue@6.3.4", "", { "dependencies": { "@datastructures-js/heap": "^4.3.3" } }, "sha512-m8Jt1OkwyHsKRz6L1FWerz3Hw8iU5vqCdBI6khC8YNssF1kXKX6cs8Xc9Zt9ocPCxO/vZhAu/KnQ+uQ4Btw6AA=="],
 
     "@esbuild/aix-ppc64": ["@esbuild/aix-ppc64@0.25.8", "", { "os": "aix", "cpu": "ppc64" }, "sha512-urAvrUedIqEiFR3FYSLTWQgLu5tb+m0qZw0NBEasUeo6wuqatkMDaRT+1uABiGXEu5vqgPd7FGE1BhsAIy9QVA=="],
 

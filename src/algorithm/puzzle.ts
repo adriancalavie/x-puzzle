@@ -1,10 +1,11 @@
-import type { Rank } from "../concepts/grid";
+import type { Direction, Rank } from "../concepts/grid";
 import { eq, type Matrix } from "../concepts/matrix";
 import {
   EMPTY_TILE_VALUE,
   isEmptyTile,
   type TileArray,
 } from "../concepts/tile";
+import { manhattan } from "./manhattan";
 
 export class PuzzleState {
   private static _solved: Map<Rank, Matrix> = new Map();
@@ -12,7 +13,6 @@ export class PuzzleState {
   private puzzle: Matrix;
   private _rank: Rank;
   private _moves: number = 0;
-  private _cost: number = 0;
 
   constructor(data: TileArray, rank: Rank) {
     this.puzzle = Array.from({ length: rank }, () => Array(rank).fill(0));
@@ -28,27 +28,35 @@ export class PuzzleState {
   }
 
   static comparator(a: PuzzleState, b: PuzzleState): number {
-    return a._cost - b._cost;
+    return a.cost - b.cost;
   }
 
   get moves(): number {
     return this._moves;
   }
 
-  get cost(): number {
-    return this._cost;
-  }
-
   get rank(): Rank {
     return this._rank;
+  }
+
+  get cost() {
+    return this._moves + this.heuristic();
   }
 
   set moves(value: number) {
     this._moves = value;
   }
 
+  getMoves(): Direction[] {
+    throw new Error("Method not implemented.");
+  }
+
   isSolved(): boolean {
     return eq(this.puzzle, this.solved);
+  }
+
+  solveAStar(): void {
+    throw new Error("Method not implemented.");
   }
 
   private get solved(): Matrix {
@@ -71,7 +79,20 @@ export class PuzzleState {
     return this._solved.get(rank)!;
   }
 
-  updateCost() {}
+  private heuristic(): number {
+    let sum = 0;
+    for (let i = 0; i < this._rank; i++) {
+      for (let j = 0; j < this._rank; j++) {
+        const value = this.puzzle[i][j];
+        const [targetX, targetY] =
+          value === 0
+            ? [this._rank - 1, this._rank - 1]
+            : [Math.floor((value - 1) / this._rank), (value - 1) % this._rank];
+        sum += manhattan(i, j, targetX, targetY);
+      }
+    }
+    return sum;
+  }
 }
 
 export const isSolved = (tiles: TileArray, rank: Rank): boolean => {
